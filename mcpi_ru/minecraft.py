@@ -44,22 +44,9 @@ class CmdPositioner:
         s = self.conn.sendReceive(self.pkg + b".getPos", id)
         return Vec3(*list(map(float, s.split(","))))
     
-    @singledispatchmethod
     def setPos(self, id: int, *args):
         """Изменить позицию сущности (entityId:int, x,y,z)"""
         self.conn.send(self.pkg + b".setPos", id, args)
-    @setPos.register
-    def _(self, id: int, x: int, y: int, z: int):
-        """Изменить позицию сущности (entityId:int, x,y,z)"""
-        self.conn.send(self.pkg + b".setPos", id, [x, y, z])
-    @setPos.register
-    def _(self, id: int, x: float, y: float, z: float):
-        """Изменить позицию сущности (entityId:int, x, y, z)"""
-        self.conn.send(self.pkg + b".setPos", id, [x, y, z])
-    @setPos.register
-    def _(self, id: int, pos: Vec3):
-        """Изменить позицию сущности (entityId:int, x,y,z)"""
-        self.conn.send(self.pkg + b".setPos", id, pos)
         
     def getTilePos(self, id)  -> Vec3:
         """Получить положение блока, на котором стоит сущность (entityId:int) => Vec3"""
@@ -151,8 +138,18 @@ class CmdPlayer(CmdPositioner):
 
     def getPos(self) -> Vec3:
         return CmdPositioner.getPos(self, [])
+    @singledispatchmethod
     def setPos(self, *args):
         return CmdPositioner.setPos(self, [], args)
+    @setPos.register
+    def _(self, x: int, y: int, z: int):
+        return CmdPositioner.setPos(self, [], [x, y, z])
+    @setPos.register
+    def _(self, x: float, y: float, z: float):
+        return CmdPositioner.setPos(self, [], [x, y, z])
+    @setPos.register
+    def _(self, position: Vec3):
+        return CmdPositioner.setPos(self, [], position)
     def getTilePos(self):
         return CmdPositioner.getTilePos(self, [])
     def setTilePos(self, *args):
