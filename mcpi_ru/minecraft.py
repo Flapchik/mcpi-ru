@@ -141,14 +141,14 @@ class CmdPlayer(CmdPositioner):
     @singledispatchmethod
     def setPos(self, *args):
         return CmdPositioner.setPos(self, [], args)
-    @setPos.register
-    def _(self, x: int, y: int, z: int):
+    @setPos.register(int, int, int)
+    def _(self, x, y, z):
         return CmdPositioner.setPos(self, [], [x, y, z])
-    @setPos.register
-    def _(self, x: float, y: float, z: float):
+    @setPos.register(float, float, float)
+    def _(self, x, y, z):
         return CmdPositioner.setPos(self, [], [x, y, z])
-    @setPos.register
-    def _(self, position: Vec3):
+    @setPos.register(Vec3)
+    def _(self, position):
         return CmdPositioner.setPos(self, [], position)
     def getTilePos(self):
         return CmdPositioner.getTilePos(self, [])
