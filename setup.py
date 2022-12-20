@@ -1,6 +1,6 @@
 from setuptools import setup
 
-__project__ = 'mcpi-ru'
+__project__ = 'mcpi_ru'
 __desc__ = 'Библиотека для программирования на Python + Minecraft (Russian) FIX'
 __version__ = '1.0'
 __author__ = "Flapchick"
